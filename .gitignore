@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+*.pb.go
+*.pb2.py
+*.pb2_grpc.py
+
+vendor/
+go.sum
+
+.DS_Store
+Thumbs.db
