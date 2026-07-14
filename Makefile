@@ -29,6 +29,7 @@ proto-go:
 
 grpc-python: proto-python
 	$(PROTOC) --proto_path=grpc/proto \
+		--plugin=protoc-gen-grpc_python=$(shell which grpc_python_plugin) \
 		--grpc_python_out=grpc/python \
 		grpc/proto/user.proto
 	@echo ">>> 已生成 user_pb2.py + user_pb2_grpc.py（message + gRPC service）"
