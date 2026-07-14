@@ -3,9 +3,10 @@ __pycache__/
 *.pyo
 *.pyd
 
-*.pb.go
-*.pb2.py
-*.pb2_grpc.py
+grpc/python/user_pb2*.py
+grpc/go/user/
+thrift/python/user/
+thrift/go/user/
 
 vendor/
 go.sum

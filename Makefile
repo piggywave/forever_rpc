@@ -18,12 +18,11 @@ proto-python:
 	@echo ">>> 只生成了 user_pb2.py（仅 message 定义，无 gRPC service）"
 
 proto-go:
-	mkdir -p grpc/go/user
 	$(PROTOC) --proto_path=grpc/proto \
-		--go_out=grpc/go \
-		--go_opt=paths=source_relative \
+		--go_out=. \
+		--go_opt=module=github.com/piggywave/forever_rpc \
 		grpc/proto/user.proto
-	@echo ">>> 只生成了 user.pb.go（仅 message 定义，无 gRPC service）"
+	@echo ">>> 只生成了 grpc/go/user/user.pb.go（仅 message 定义，无 gRPC service）"
 
 # ---- Protobuf + gRPC: 带 RPC 框架 ----
 
@@ -36,10 +35,10 @@ grpc-python: proto-python
 
 grpc-go: proto-go
 	$(PROTOC) --proto_path=grpc/proto \
-		--go-grpc_out=grpc/go \
-		--go-grpc_opt=paths=source_relative \
+		--go-grpc_out=. \
+		--go-grpc_opt=module=github.com/piggywave/forever_rpc \
 		grpc/proto/user.proto
-	@echo ">>> 已生成 user.pb.go + user_grpc.pb.go（message + gRPC service）"
+	@echo ">>> 已生成 grpc/go/user/user.pb.go + user_grpc.pb.go（message + gRPC service）"
 
 # ---- Thrift: 不带 RPC（只生成 struct 数据结构，用 no_service 选项） ----
 

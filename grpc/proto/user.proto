@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package user;
 
-option go_package = "./grpc/go/user";
+option go_package = "github.com/piggywave/forever_rpc/grpc/go/user";
 option java_package = "com.example.user";
 option java_outer_classname = "UserProto";
 option java_multiple_files = true;

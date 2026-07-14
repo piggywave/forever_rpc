@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 
-	pb "./user"
+	pb "github.com/piggywave/forever_rpc/grpc/go/user"
 
 	"google.golang.org/grpc"
 )
