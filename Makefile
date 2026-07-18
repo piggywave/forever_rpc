@@ -1,12 +1,14 @@
 PROTOC := protoc
 THRIFT := thrift
 GRPC_PY_PLUGIN := grpc_python_plugin
+GOOGLEAPIS := third_party/googleapis
 
 .PHONY: all proto-python proto-go grpc-python grpc-go \
+        gateway-go openapi \
         thrift-python-thriftonly thrift-go-thriftonly thrift-python thrift-go \
         clean
 
-all: grpc-python grpc-go thrift-python thrift-go
+all: grpc-python grpc-go gateway-go openapi thrift-python thrift-go
 
 # ---- Protobuf: 不带 RPC（只生成 message 结构体） ----
 
@@ -19,6 +21,7 @@ proto-python:
 
 proto-go:
 	$(PROTOC) --proto_path=grpc/proto \
+		--proto_path=$(GOOGLEAPIS) \
 		--go_out=. \
 		--go_opt=module=github.com/piggywave/forever_rpc \
 		grpc/proto/user.proto
@@ -35,10 +38,34 @@ grpc-python: proto-python
 
 grpc-go: proto-go
 	$(PROTOC) --proto_path=grpc/proto \
+		--proto_path=$(GOOGLEAPIS) \
 		--go-grpc_out=. \
 		--go-grpc_opt=module=github.com/piggywave/forever_rpc \
 		grpc/proto/user.proto
 	@echo ">>> 已生成 grpc/go/user/user.pb.go + user_grpc.pb.go（message + gRPC service）"
+
+# ---- gRPC Gateway: HTTP 网关（REST → gRPC 转码） ----
+
+gateway-go: grpc-go
+	$(PROTOC) --proto_path=grpc/proto \
+		--proto_path=$(GOOGLEAPIS) \
+		--grpc-gateway_out=. \
+		--grpc-gateway_opt=module=github.com/piggywave/forever_rpc \
+		--grpc-gateway_opt=logtostderr=true \
+		grpc/proto/user.proto
+	@echo ">>> 已生成 grpc/go/user/user.pb.gw.go（HTTP → gRPC 网关）"
+
+# ---- OpenAPI / Swagger 文档 ----
+
+openapi:
+	mkdir -p docs
+	$(PROTOC) --proto_path=grpc/proto \
+		--proto_path=$(GOOGLEAPIS) \
+		--openapiv2_out=docs \
+		--openapiv2_opt=logtostderr=true \
+		--openapiv2_opt=json_names_for_fields=false \
+		grpc/proto/user.proto
+	@echo ">>> 已生成 docs/user.swagger.json（Swagger/OpenAPI 文档）"
 
 # ---- Thrift: 不带 RPC（只生成 struct 数据结构，用 no_service 选项） ----
 
