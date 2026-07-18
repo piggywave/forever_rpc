@@ -3,6 +3,8 @@ __pycache__/
 *.pyo
 *.pyd
 
+.venv/
+
 grpc/python/user_pb2*.py
 grpc/go/user/
 thrift/python/user/

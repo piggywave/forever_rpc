@@ -1,6 +1,11 @@
 namespace py user
 namespace go user
 
+enum Gender {
+    MALE = 1
+    FEMALE = 2
+}
+
 struct User {
     1: i64 id
     2: string name
@@ -8,6 +13,7 @@ struct User {
     4: i32 age
     5: string address
     6: list<string> tags
+    7: Gender gender
 }
 
 struct GetUserRequest {
