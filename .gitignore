@@ -12,6 +12,7 @@ thrift/go/user/
 
 vendor/
 go.sum
+go.work.sum
 
 .DS_Store
 Thumbs.db

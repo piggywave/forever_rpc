@@ -13,6 +13,7 @@ PROTOS := $(wildcard $(PROTO_DIR)/*.proto)
 .PHONY: all proto-python proto-go grpc-python grpc-go \
         gateway-go openapi \
         thrift-python-thriftonly thrift-go-thriftonly thrift-python thrift-go \
+        kitex-gen kitex-build \
         clean list-protos
 
 all: grpc-python grpc-go gateway-go openapi thrift-python thrift-go
@@ -110,3 +111,15 @@ clean:
 	rm -f grpc/python/*_pb2*.py
 	rm -rf grpc/go/*/
 	rm -rf thrift/python/user thrift/go/user
+
+# ---- Kitex: 字节跳动高性能 RPC 框架 ----
+
+kitex-gen:
+	cd kitex && KITEX=$(GOPATH)/bin/kitex $$KITEX -module github.com/piggywave/forever_rpc/kitex idl/user.thrift
+	@echo ">>> 已生成 kitex_gen/（Kitex 代码生成）"
+
+kitex-build:
+	-mv go.work go.work.tmp 2>/dev/null
+	cd kitex && go build -o /tmp/kitex_server server.go && go build -o /tmp/kitex_client client.go
+	-mv go.work.tmp go.work 2>/dev/null
+	@echo ">>> Kitex 服务端和客户端编译成功"
